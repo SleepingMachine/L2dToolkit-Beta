@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="L2dToolkit_Beta.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:L2dToolkit_Beta"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="L2dToolkit-Beta">
+
+    <!--  界面材质：MicaBackdrop云母 DesktopAcrylicBackdrop亚克力  -->
+    <Window.SystemBackdrop>
+        <DesktopAcrylicBackdrop/>
+    </Window.SystemBackdrop>
+
+    <Grid>
+        <!--  标题栏  -->
+        <Image
+            x:Name="TitleBarIcon"
+            Grid.Column="1"
+            Width="20"
+            Height="20"
+            Margin="64,14,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Source="/Assets/image/icon.png" />
+        <TextBlock
+            Grid.Column ="0"
+            Margin="96,16,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            FontFamily="/Assets/Fonts/w600b0.ttf#Alimama FangYuanTi VF"
+            FontSize="16"
+            Text="L2d Toolkit - Ver.Beta"
+            TextWrapping="WrapWholeWords" />
+
+        <!--  导航栏  -->
+        <NavigationView
+                x:Name="NavigationView"
+                Grid.Column="1"
+                IsSettingsVisible="True"
+                IsTabStop="False"
+                SelectionChanged="NavigationView_SelectionChanged"
+                PaneTitle="功能"
+                PaneDisplayMode="Left">
+            <NavigationView.MenuItems>
+                <NavigationViewItem
+                            Content="专注计时"
+                            Tag="TimerPage">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE916;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItem 
+                            Content="物理文件整合" 
+                            Tag="FilesPage">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xECE9;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                
+            </NavigationView.MenuItems>
+            
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem
+                            Content="Welcome &amp; Help"
+                            Tag="WelcomePage">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE776;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.FooterMenuItems>
+
+            <Frame x:Name="contentFrame" Margin="0,0,0,0"/>
+        </NavigationView>
+    </Grid>
+</Window>

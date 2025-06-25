@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="L2dToolkit_Beta.Pages.timer_page"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:L2dToolkit_Beta.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lvc="using:LiveChartsCore.SkiaSharpView.WinUI"
+    mc:Ignorable="d">
+
+    <Page.DataContext>
+        <local:SystemInfoViewModel/>
+    </Page.DataContext>
+
+    <Grid>
+        <TextBlock Text="专注计时" FontSize="28" FontFamily="/Assets/Fonts/w600b0.ttf#Alimama FangYuanTi VF" Margin="32,44,0,0"/>
+        <Grid
+            Margin="0,80,0,0"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            Opacity="0.2">
+        </Grid>
+        <ScrollViewer
+            Width="640"
+            Margin="0,80,0,0"
+            >
+            <StackPanel
+                Height="800">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Button
+                        Width ="192"
+                        Height="192"
+                        Grid.Column="0"
+                        Margin="8,8,0,0">
+                        <Grid Width="160">
+                            <ProgressRing Width="152" Height="152" Value="0"
+                                x:Name="total_duration_progressring"
+                                Opacity="0.2"
+                                IsIndeterminate="False"
+                                Maximum="60"
+                                Background="LightGray"/>
+                            <TextBlock
+                                x:Name="total_duration"
+                                FontSize="38"
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="/Assets/Fonts/w600b0.ttf#Alimama FangYuanTi VF"
+                                Text="00:00:00"/>
+                            <TextBlock
+                                FontSize="14"
+                                VerticalAlignment="Center"
+                                HorizontalTextAlignment="Center"
+                                Margin="0,52,0,0"
+                                FontFamily="/Assets/Fonts/w600b0.ttf#Alimama FangYuanTi VF"
+                                Text="总计专注时长"/>
+                        </Grid>
+                    </Button>
+                    
+                    <Button
+                        Width ="240"
+                        Height="192"
+                        Grid.Column="1"
+                        Margin="8,8,0,0">
+                        <Grid
+                            Width ="220"
+                            Height="190">
+                            <lvc:CartesianChart Grid.Row="1" 
+                                Series="{Binding Series}">
+                            </lvc:CartesianChart>
+                        </Grid>
+                    </Button>
+                    
+                    <StackPanel Grid.Column="2">
+                        <Button
+                            Width ="240"
+                            Height="126"
+                            Click="Click_StartTiming_Button"
+                            Margin="8,8,0,0">
+                            <FontIcon FontSize="20"  FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF5B0;" />
+                        </Button>
+                        <Button
+                            Width ="240"
+                            Height="60"
+                            Margin="8,8,0,0">
+                            <FontIcon FontSize="20"  FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF5B0;" />
+                        </Button>
+                    </StackPanel>
+
+
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "L2dToolkit-Beta (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "L2dToolkit-Beta (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
