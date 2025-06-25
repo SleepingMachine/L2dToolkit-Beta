@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -10,6 +11,7 @@ using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using SkiaSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -63,7 +65,7 @@ namespace L2dToolkit_Beta.Pages
 
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = TimeSpan.FromMicroseconds(500);
+            dispatcherTimer.Interval = TimeSpan.FromMicroseconds(1000);
 
             switch (DataOverload.timerState)
             {
@@ -128,7 +130,7 @@ namespace L2dToolkit_Beta.Pages
             //Debug.WriteLine($"CPU: {cpuCounter.NextValue():F2}%");
             //Debug.WriteLine($"Mem: {ramCounter.NextValue():F2}%");
             Debug.WriteLine(App.cpuCounter.NextValue());
-            Debug.WriteLine(App.ramCounter.NextValue());
+            SystemInfoViewModel.AddRamItem(App.ramCounter.NextValue());
         }
     }
 
@@ -136,94 +138,54 @@ namespace L2dToolkit_Beta.Pages
 
     public partial class SystemInfoViewModel
     {
-        private readonly Random _random = new();
-
-        // We use the ObservableCollection class to let the chart know 
-        // when a new item is added or removed from the chart. 
         public ObservableCollection<ISeries> Series { get; set; }
 
-        // The ObservablePoints property is an ObservableCollection of ObservableValue 
-        // it means that the chart is listening for changes in this collection 
-        // and also for changes in the properties of each element in the collection 
-        public ObservableCollection<ObservableValue> ObservableValues { get; set; }
-
+        static private ObservableCollection<ObservableValue> ramObservableValues;
         public SystemInfoViewModel()
         {
-            ObservableValues = [
-            ];
+            ramObservableValues = new ObservableCollection<ObservableValue> { };
+            Series = new ObservableCollection<ISeries>
+            {
+                new LineSeries<ObservableValue>
+                {
+                    Values = ramObservableValues,
+                    Fill = new SolidColorPaint(SKColors.CornflowerBlue.WithAlpha(90)),
+                    Stroke = null,
+                    GeometryFill = null,
+                    GeometryStroke = null
+                }
 
-            Series = [
-                new LineSeries<ObservableValue>(ObservableValues)
-            ];
+            };
         }
+
+        public Axis[] YAxes { get; set; } = new Axis[]
+        {
+            new Axis
+            {
+                MaxLimit = 100,
+                MinLimit = 0,
+                CrosshairSnapEnabled = true
+            }
+        };
+
+        public Axis[] XAxes { get; set; } = new Axis[]
+        {
+            new Axis
+            {
+                IsVisible = false
+            }
+        };
 
         [RelayCommand]
-        public void AddItem()
+        static public void AddRamItem(float value)
         {
-            var randomValue = _random.Next(1, 10);
-
-            // the new value is added to the collection 
-            // the chart is listening, and will update and animate the change 
-
-            ObservableValues.Add(new() { Value = randomValue });
+            ramObservableValues.Add(new(value));
+            if (ramObservableValues.Count > 100) 
+            {
+                ramObservableValues.RemoveAt(0);
+            }
         }
 
-        [RelayCommand]
-        public void RemoveItem()
-        {
-            if (ObservableValues.Count == 0) return;
-
-            // the last value is removed from the collection 
-            // the chart is listening, and will update and animate the change 
-
-            ObservableValues.RemoveAt(0);
-        }
-
-        [RelayCommand]
-        public void UpdateItem()
-        {
-            var randomValue = _random.Next(1, 10);
-            var lastItem = ObservableValues[ObservableValues.Count - 1];
-
-            // becase lastItem is an ObservableObject and implements INotifyPropertyChanged 
-            // the chart is listening for changes in the Value property 
-            // and will update and animate the change 
-
-            lastItem.Value = randomValue;
-        }
-
-        [RelayCommand]
-        public void ReplaceItem()
-        {
-            var randomValue = _random.Next(1, 10);
-            var randomIndex = _random.Next(0, ObservableValues.Count - 1);
-
-            // replacing and item also triggers the chart to update and animate the change 
-
-            ObservableValues[randomIndex] = new(randomValue);
-        }
-
-        [RelayCommand]
-        public void AddSeries()
-        {
-            var values = Enumerable.Range(0, 3)
-                .Select(_ => _random.Next(0, 10))
-                .ToArray();
-
-            // a new line series is added to the chart 
-
-            Series.Add(new LineSeries<int>(values));
-        }
-
-        [RelayCommand]
-        public void RemoveSeries()
-        {
-            if (Series.Count == 1) return;
-
-            // the last series is removed from the chart 
-
-            Series.RemoveAt(Series.Count - 1);
-        }
     }
 
 }

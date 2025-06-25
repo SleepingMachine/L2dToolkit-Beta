@@ -74,9 +74,12 @@
                         Grid.Column="1"
                         Margin="8,8,0,0">
                         <Grid
-                            Width ="220"
-                            Height="190">
+                            Width ="240"
+                            Margin="-20,-4,0,0"
+                            Height="192">
                             <lvc:CartesianChart Grid.Row="1" 
+                                YAxes="{Binding YAxes}"
+                                XAxes="{Binding XAxes}"
                                 Series="{Binding Series}">
                             </lvc:CartesianChart>
                         </Grid>
