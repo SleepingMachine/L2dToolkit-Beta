@@ -54,11 +54,11 @@ namespace L2dToolkit_Beta
             m_window.Activate();
 
             //设置窗口大小
-            m_window.MoveAndResize(100, 100, 720, 300);
+            m_window.MoveAndResize(100, 100, 800, 300);
             //m_window.SetIsResizable (false);
             //m_window.SetIsMaximizable (false);
             var manager = WinUIEx.WindowManager.Get(m_window);
-            manager.MinWidth  = 720;
+            //manager.MinWidth  = 800;
             manager.MinHeight = 300;
         }
 

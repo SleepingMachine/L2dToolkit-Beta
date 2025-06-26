@@ -44,7 +44,9 @@ namespace L2dToolkit_Beta.Pages
         public static DateTimeOffset lastTime;
         public static DateTimeOffset stopTime;
         public static TIMER_STATUS timerState;
-        public static TimeSpan overloadSpan; 
+        public static TimeSpan overloadSpan;
+        public static int last_cpu_info;
+        public static int last_ram_info;
 
         public DataOverload() 
         {
@@ -71,13 +73,16 @@ namespace L2dToolkit_Beta.Pages
             switch (DataOverload.timerState)
             {
                 case DataOverload.TIMER_STATUS.INITIAL_STATE:
+                    start_button_text.Text = "单击开始计时";
                     break;
 
                 case DataOverload.TIMER_STATUS.TIMING_STATE:
+                    start_button_text.Text = "单击暂停计时";
                     dispatcherTimer.Start();
                     break;
 
                 case DataOverload.TIMER_STATUS.STOP_STATE:
+                    start_button_text.Text = "单击继续计时";
                     total_duration.Text = DataOverload.overloadSpan.ToString(@"hh\:mm\:ss");
                     total_duration_progressring.Value = DataOverload.overloadSpan.Seconds % 60;
                     dispatcherTimer.Stop();
@@ -94,12 +99,19 @@ namespace L2dToolkit_Beta.Pages
                     DataOverload.timerState = DataOverload.TIMER_STATUS.TIMING_STATE;
                     DataOverload.startTime = DateTimeOffset.Now;
                     DataOverload.lastTime = DataOverload.startTime;
+                    start_button_text.Text = "单击暂停计时";
                     dispatcherTimer.Start();
                     break;
 
                 case DataOverload.TIMER_STATUS.TIMING_STATE:
                     DataOverload.timerState = DataOverload.TIMER_STATUS.STOP_STATE;
                     DataOverload.stopTime = DateTimeOffset.Now;
+
+                    start_button_text.Text = "单击继续计时";
+                    cpu_info_text.Text = "0% CPU占用";
+                    ram_info_text.Text = "0% RAM占用";
+                    SystemInfoViewModel.ClearAllItems();
+
                     dispatcherTimer.Stop();
                     break;
 
@@ -108,6 +120,7 @@ namespace L2dToolkit_Beta.Pages
                     DateTimeOffset time = DateTimeOffset.Now;
                     TimeSpan span = time - DataOverload.stopTime;
                     DataOverload.startTime = DataOverload.startTime + span;
+                    start_button_text.Text = "单击暂停计时";
                     dispatcherTimer.Start();
                     break;
             }
@@ -128,10 +141,11 @@ namespace L2dToolkit_Beta.Pages
 
         public void Get_System_Info()
         {
-            //Debug.WriteLine($"CPU: {cpuCounter.NextValue():F2}%");
             //Debug.WriteLine($"Mem: {ramCounter.NextValue():F2}%");
             SystemInfoViewModel.AddRamItem((int)App.ramCounter.NextValue());
             SystemInfoViewModel.AddCpuItem((int)App.cpuCounter.NextValue());
+            cpu_info_text.Text = (int)App.cpuCounter.NextValue() + "% CPU占用";
+            ram_info_text.Text = (int)App.ramCounter.NextValue() + "% RAM占用";
         }
     }
 
@@ -196,7 +210,7 @@ namespace L2dToolkit_Beta.Pages
         static public void AddRamItem(int value)
         {
             ramObservableValues.Add(new(value));
-            if (ramObservableValues.Count > 100) 
+            if (ramObservableValues.Count > 60) 
             {
                 ramObservableValues.RemoveAt(0);
             }
@@ -206,10 +220,16 @@ namespace L2dToolkit_Beta.Pages
         static public void AddCpuItem(int value)
         {
             cpuObservableValues.Add(new(value));
-            if (cpuObservableValues.Count > 100)
+            if (cpuObservableValues.Count > 60)
             {
                 cpuObservableValues.RemoveAt(0);
             }
+        }
+
+        static public void ClearAllItems()
+        {
+            ramObservableValues.Clear();
+            cpuObservableValues.Clear();
         }
 
     }

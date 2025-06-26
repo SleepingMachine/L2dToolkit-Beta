@@ -21,7 +21,7 @@
             Opacity="0.2">
         </Grid>
         <ScrollViewer
-            Width="640"
+            Width="720"
             Margin="0,80,0,0"
             >
             <StackPanel
@@ -42,14 +42,18 @@
                         Width ="192"
                         Height="192"
                         Grid.Column="0"
+                        Click="Click_StartTiming_Button"
                         Margin="8,8,0,0">
                         <Grid Width="160">
                             <ProgressRing Width="152" Height="152" Value="0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
                                 x:Name="total_duration_progressring"
                                 Opacity="0.2"
                                 IsIndeterminate="False"
                                 Maximum="60"
                                 Background="LightGray"/>
+
                             <TextBlock
                                 x:Name="total_duration"
                                 FontSize="38"
@@ -59,31 +63,30 @@
                                 FontFamily="/Assets/Fonts/w600b0.ttf#Alimama FangYuanTi VF"
                                 Text="00:00:00"/>
                             <TextBlock
+                                x:Name="start_button_text"
                                 FontSize="14"
                                 VerticalAlignment="Center"
                                 HorizontalTextAlignment="Center"
-                                Margin="0,52,0,0"
+                                Margin="0,62,0,0"
                                 FontFamily="/Assets/Fonts/w600b0.ttf#Alimama FangYuanTi VF"
-                                Text="总计专注时长"/>
+                                Text="单击开始计时"/>
+
                         </Grid>
                     </Button>
-                    <Button
-                        Width ="240"
-                        Height="192"
-                        Grid.Column="1"
-                        Margin="8,8,0,0">
-                    </Button>
-                    
                     <StackPanel Grid.Column="2">
+                        <Button Height="92" Width="120" Margin="8,8,0,0"/>
+                        <Button Height="92" Width="120" Margin="8,8,0,0"/>
+                    </StackPanel>
+
+                            <StackPanel Grid.Column="3">
                         <Button
-                            Width ="160"
-                            Height="126"
-                            Click="Click_StartTiming_Button"
+                            Width ="200"
+                            Height="156"
                             Margin="8,8,0,0">
                             <Grid
-                            Width ="160"
-                            Margin="-20,-4,0,0"
-                            Height="126">
+                                Margin="-20,-4,0,0"
+                                Width ="200"
+                                Height="156">
                                 <lvc:CartesianChart Grid.Row="1" 
                                 YAxes="{Binding YAxes}"
                                 XAxes="{Binding XAxes}"
@@ -92,10 +95,16 @@
                             </Grid>
                         </Button>
                         <Button
-                            Width ="240"
-                            Height="60"
+                            Width ="200"
+                            Height="28"
                             Margin="8,8,0,0">
-                            <FontIcon FontSize="20"  FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF5B0;" />
+                            <Grid
+                                Width ="170" 
+                                Margin="0,3,0,0">
+                                <TextBlock x:Name="cpu_info_text" FontSize="11" Text="0% CPU占用" FontFamily="/Assets/Fonts/w600b0.ttf#Alimama FangYuanTi VF" HorizontalAlignment="Left" />
+                                <TextBlock x:Name="ram_info_text" FontSize="11" Text="0% RAM占用" FontFamily="/Assets/Fonts/w600b0.ttf#Alimama FangYuanTi VF" HorizontalAlignment="Right" />
+                            </Grid>
+
                         </Button>
                     </StackPanel>
 
