@@ -40,7 +40,7 @@ namespace L2dToolkit_Beta
         public App()
         {
             this.InitializeComponent();
-            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            cpuCounter = new PerformanceCounter("Processor Information", "% Processor Utility", "_Total");
             ramCounter = new PerformanceCounter("Memory", "% Committed Bytes In Use");
         }
 

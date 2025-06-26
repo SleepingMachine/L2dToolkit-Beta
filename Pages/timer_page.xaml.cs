@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -65,7 +66,7 @@ namespace L2dToolkit_Beta.Pages
 
             dispatcherTimer = new DispatcherTimer();
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = TimeSpan.FromMicroseconds(1000);
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1000);
 
             switch (DataOverload.timerState)
             {
@@ -129,8 +130,8 @@ namespace L2dToolkit_Beta.Pages
         {
             //Debug.WriteLine($"CPU: {cpuCounter.NextValue():F2}%");
             //Debug.WriteLine($"Mem: {ramCounter.NextValue():F2}%");
-            Debug.WriteLine(App.cpuCounter.NextValue());
-            SystemInfoViewModel.AddRamItem(App.ramCounter.NextValue());
+            SystemInfoViewModel.AddRamItem((int)App.ramCounter.NextValue());
+            SystemInfoViewModel.AddCpuItem((int)App.cpuCounter.NextValue());
         }
     }
 
@@ -141,14 +142,27 @@ namespace L2dToolkit_Beta.Pages
         public ObservableCollection<ISeries> Series { get; set; }
 
         static private ObservableCollection<ObservableValue> ramObservableValues;
+        static private ObservableCollection<ObservableValue> cpuObservableValues;
+
         public SystemInfoViewModel()
         {
             ramObservableValues = new ObservableCollection<ObservableValue> { };
+            cpuObservableValues = new ObservableCollection<ObservableValue> { };
+
             Series = new ObservableCollection<ISeries>
             {
                 new LineSeries<ObservableValue>
                 {
                     Values = ramObservableValues,
+                    Fill = new SolidColorPaint(SKColors.DarkSeaGreen.WithAlpha(90)),
+                    Stroke = null,
+                    GeometryFill = null,
+                    GeometryStroke = null
+                },
+
+                new LineSeries<ObservableValue>
+                {
+                    Values = cpuObservableValues,
                     Fill = new SolidColorPaint(SKColors.CornflowerBlue.WithAlpha(90)),
                     Stroke = null,
                     GeometryFill = null,
@@ -156,6 +170,8 @@ namespace L2dToolkit_Beta.Pages
                 }
 
             };
+
+
         }
 
         public Axis[] YAxes { get; set; } = new Axis[]
@@ -177,12 +193,22 @@ namespace L2dToolkit_Beta.Pages
         };
 
         [RelayCommand]
-        static public void AddRamItem(float value)
+        static public void AddRamItem(int value)
         {
             ramObservableValues.Add(new(value));
             if (ramObservableValues.Count > 100) 
             {
                 ramObservableValues.RemoveAt(0);
+            }
+        }
+
+        [RelayCommand]
+        static public void AddCpuItem(int value)
+        {
+            cpuObservableValues.Add(new(value));
+            if (cpuObservableValues.Count > 100)
+            {
+                cpuObservableValues.RemoveAt(0);
             }
         }
 
